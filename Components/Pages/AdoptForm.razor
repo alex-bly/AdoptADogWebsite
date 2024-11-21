@@ -1,0 +1,177 @@
+﻿@page "/adopt-dog"
+@using System.Text
+<h3>Adopt a Dog Form</h3>
+
+
+<div>
+    <form>
+        <!-- Full Name -->
+       
+        <div>
+            [Required]
+            <label for="fullName"> Full Name (First, Middle Initial, Last):</label>
+            <input type="text" id="fullName" @bind="FullName" class="form-control" />
+        </div>
+
+        <!-- Email -->
+        <div>
+            [Required]
+            <label for="email"> Email:</label>
+            <input type="email" id="email" @bind="Email" class="form-control" />
+        </div>
+
+        <!-- Phone Number -->
+        <div>
+            [Required]
+            <label for="phoneNumber"> Phone Number:</label>
+            <input type="tel" id="phoneNumber" @bind="PhoneNumber" class="form-control" />
+        </div>
+
+        <!-- Address -->
+        <div>
+            [Required]
+            <label for="address"> Address:</label>
+            <input type="text" id="address" @bind="Address" class="form-control" />
+        </div>
+
+        <!-- City -->
+        <div>
+            [Required]
+            <label for="city"> City:</label>
+            <input type="text" id="city" @bind="City" class="form-control" />
+        </div>
+
+        <!-- State -->
+        <div>
+            [Required]
+            <label for="state"> State:</label>
+            <select id="state" @bind="State" class="form-control">
+                <option value="" disabled selected>Select your state</option>
+                @foreach (var state in States)
+                {
+                    <option value="@state">@state</option>
+                }
+            </select>
+        </div>
+
+        <!-- House Size -->
+        <div>
+            [Required]
+            <label for="houseSize"> House Size:</label>
+            <select id="houseSize" @bind="HouseSize" class="form-control">
+                <option value="" disabled selected>Select house size</option>
+                @foreach (var size in HouseSizes)
+                {
+                    <option value="@size">@size</option>
+                }
+            </select>
+        </div>
+
+        <!-- Number of Pets -->
+        <div>
+            [Required]
+            <label for="numberOfPets"> Number of Pets:</label>
+            <input type="number" id="numberOfPets" @bind="NumberOfPets" class="form-control" />
+        </div>
+
+        <!-- Previous Dog Owner -->
+        <div>
+            [Required]
+            <label for="previousDogOwner"> Have you previously owned a dog?</label>
+            <input type="checkbox" id="previousDogOwner" @bind="PreviousDogOwner" />
+        </div>
+
+        <!-- Questions/Concerns -->
+        <div>
+            <label for="questions">Questions or Concerns:</label>
+            <textarea id="questions" @bind="QuestionsAndConcerns" class="form-control"></textarea>
+        </div>
+
+
+        <!-- Submit Button -->
+        <button class="btn btn-primary" @onclick="HandleSubmit">Submit</button>
+    </form>
+
+    <!-- Error Messages -->
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">
+            @ErrorMessage
+        </div>
+    }
+
+    <!-- Success Message -->
+    @if (IsSubmitted)
+    {
+        <div class="alert alert-success mt-3">
+            Your form has been submitted for review. Thank you!
+        </div>
+    }
+</div>
+
+@code {
+    // Form Fields
+    private string FullName { get; set; } = string.Empty;
+    private string Email { get; set; } = string.Empty;
+    private string PhoneNumber { get; set; } = string.Empty;
+    private string Address { get; set; } = string.Empty;
+    private string City { get; set; } = string.Empty;
+    private string State { get; set; } = string.Empty;
+    private string HouseSize { get; set; } = string.Empty;
+    private int? NumberOfPets { get; set; }
+    private bool PreviousDogOwner { get; set; } = false;
+    private string QuestionsAndConcerns { get; set; } = string.Empty;
+
+    // States and House Sizes
+    private List<string> States { get; set; } = new List<string>
+    {
+        "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+        "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+        "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+        "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+        "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+    };
+
+    private List<string> HouseSizes { get; set; } = new List<string>
+    {
+        "Small", "Medium", "Large"
+    };
+
+    // Validation
+    private string ErrorMessage { get; set; } = string.Empty;
+    private bool IsSubmitted { get; set; } = false;
+
+    private void HandleSubmit()
+    {
+
+        ErrorMessage = string.Empty;
+        IsSubmitted = false;
+
+        var errors = new StringBuilder();
+
+        // Validate required fields
+        if (string.IsNullOrWhiteSpace(FullName)) errors.AppendLine("• Full Name is required.");
+        if (string.IsNullOrWhiteSpace(Email)) errors.AppendLine("• Email is required.");
+        if (string.IsNullOrWhiteSpace(PhoneNumber)) errors.AppendLine("• Phone Number is required.");
+        if (string.IsNullOrWhiteSpace(Address)) errors.AppendLine("• Address is required.");
+        if (string.IsNullOrWhiteSpace(City)) errors.AppendLine("• City is required.");
+        if (string.IsNullOrWhiteSpace(State)) errors.AppendLine("• State is required.");
+        if (string.IsNullOrWhiteSpace(HouseSize)) errors.AppendLine("• House Size is required.");
+        if (!NumberOfPets.HasValue) errors.AppendLine("• Number of Pets is required.");
+        if (!PreviousDogOwner) errors.AppendLine("• Please confirm if you have previously owned a dog.");
+
+        if (errors.Length > 0)
+        {
+            ErrorMessage = "An error has occurred. Please input data into these fields:";
+            ErrorMessage += "\n" + errors.ToString(); // Ensuring no leading newline
+            return;
+        }
+
+        // Clear errors and mark submission as successful
+        ErrorMessage = string.Empty;
+        IsSubmitted = true;
+
+        // Add logic to save or send form data for review
+    }
+}
+
