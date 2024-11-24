@@ -1,0 +1,45 @@
+CREATE TABLE IF NOT EXISTS userPerson (
+    PersonID SERIAL PRIMARY KEY,
+    Fname VARCHAR(255),
+    Lname VARCHAR(255),
+    AddressID VARCHAR(255),
+    UserEmail VARCHAR(255),
+    PhoneNumber VARCHAR(15)
+);
+
+CREATE TABLE IF NOT EXISTS userAccount (
+    UserID SERIAL PRIMARY KEY,
+    PersonID INT,
+    Username VARCHAR(50),
+    Password VARCHAR(255),
+    Admin BOOLEAN,
+    FOREIGN KEY (PersonID) REFERENCES userPerson(PersonID)
+);
+
+CREATE TABLE if not exists dogs (
+    DogID INT PRIMARY KEY,
+    Breed VARCHAR(255),
+    Age INT,
+    Name VARCHAR(255),
+    Gender VARCHAR(10),
+    Size VARCHAR(50)
+);
+create table if not exists address (
+addressId serial primary key,
+street varchar(255),
+city varchar(255),
+state varchar (15),
+country varchar(20),
+zip int
+);
+
+CREATE TABLE IF NOT EXISTS submittedForms (
+    FormID SERIAL PRIMARY KEY,
+    UserID INT, 
+    houseSize VARCHAR(10),
+    numberOfPets INT,
+    prevDog BOOLEAN,
+    questions VARCHAR(1000),
+    FOREIGN KEY (UserID) REFERENCES userAccount(UserID) 
+);
+
